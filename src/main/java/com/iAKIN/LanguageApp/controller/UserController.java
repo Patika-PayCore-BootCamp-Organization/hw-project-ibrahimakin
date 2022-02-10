@@ -1,13 +1,11 @@
-package com.patika.test.controller;
+package com.iAKIN.LanguageApp.controller;
 
-import com.patika.test.model.User;
-import com.patika.test.service.UserService;
+import com.iAKIN.LanguageApp.model.User;
+import com.iAKIN.LanguageApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
@@ -28,8 +26,19 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/get")
+    public User getUser(@RequestParam Integer id) {
+        return userService.getUser(id);
+    }
+
     @RequestMapping(method = RequestMethod.POST, path = "/add")
     public boolean addUser(@RequestBody User user) {
         return userService.addUser(user);
     }
+
+    @PutMapping(value = "/update")
+    public User updateUser(@RequestBody final User user) { return userService.updateUser(user); }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public boolean deleteUser(@PathVariable @Min(1) final Integer id) { return userService.deleteUser(id); }
 }
