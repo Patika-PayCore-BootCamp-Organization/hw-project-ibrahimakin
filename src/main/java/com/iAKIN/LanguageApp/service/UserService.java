@@ -1,6 +1,6 @@
-package com.patika.test.service;
+package com.iAKIN.LanguageApp.service;
 
-import com.patika.test.model.User;
+import com.iAKIN.LanguageApp.model.User;
 
 import java.util.List;
 
@@ -14,5 +14,5 @@ public interface UserService {
 
     boolean deleteUser(Integer id);
 
-    User updateUser(String name, User user);
+    User updateUser(User user);
 }
