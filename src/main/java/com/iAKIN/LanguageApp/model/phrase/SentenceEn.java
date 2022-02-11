@@ -1,5 +1,7 @@
 package com.iAKIN.LanguageApp.model.phrase;
 
+import org.springframework.lang.Nullable;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.List;
 @Table(name = "sentence_en")
 public class SentenceEn extends Sentence {
     @OneToMany
+    @Nullable
     @JoinTable(
             name = "sentence_en_tr",
             joinColumns = @JoinColumn(name = "sentence_tr_id"),
@@ -19,8 +22,5 @@ public class SentenceEn extends Sentence {
     public void setEqual(List<SentenceTr> equal) { this.equal = equal; }
 
     @Override
-    public List<Phrase> getEquals() {
-        List<Phrase> phrases = new ArrayList<>(getEqual());
-        return phrases;
-    }
+    public List<Phrase> getEquals() { return new ArrayList<>(getEqual()); }
 }

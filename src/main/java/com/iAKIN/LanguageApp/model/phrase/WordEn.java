@@ -7,7 +7,7 @@ import java.util.List;
 @Entity
 @Table(name = "word_en")
 public class WordEn extends Word {
-    @OneToMany
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
             name = "word_en_tr",
             joinColumns = @JoinColumn(name = "word_tr_id"),
@@ -19,8 +19,5 @@ public class WordEn extends Word {
     public void setEqual(List<WordTr> equal) { this.equal = equal; }
 
     @Override
-    public List<Phrase> getEquals() {
-        List<Phrase> phrases = new ArrayList<>(getEqual());
-        return phrases;
-    }
+    public List<Phrase> getEquals() { return new ArrayList<>(getEqual()); }
 }

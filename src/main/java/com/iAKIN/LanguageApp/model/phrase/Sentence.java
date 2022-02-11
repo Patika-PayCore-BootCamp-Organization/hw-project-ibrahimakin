@@ -1,7 +1,12 @@
 package com.iAKIN.LanguageApp.model.phrase;
 
+import lombok.*;
 import javax.persistence.*;
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 @MappedSuperclass
 public abstract class Sentence implements Phrase {
     @Id
@@ -18,19 +23,6 @@ public abstract class Sentence implements Phrase {
     @Column(name = "quotes", length = 50)
     private String quotes;
 
-    public String getQuotes() { return quotes; }
-
-    public void setQuotes(String quotes) { this.quotes = quotes; }
-
-    public String getImg() { return img; }
-
-    public void setImg(String img) { this.img = img; }
-
-    public String getValue() { return value; }
-
-    public void setValue(String value) { this.value = value; }
-
-    public Integer getId() { return id; }
-
-    public void setId(Integer id) { this.id = id; }
+    @Override
+    public String getDef() { return null; }
 }
