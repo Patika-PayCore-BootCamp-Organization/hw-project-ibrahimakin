@@ -7,11 +7,12 @@ import java.util.List;
 @Entity
 @Table(name = "sentence_tr")
 public class SentenceTr extends Sentence {
-    @OneToMany
+
+    @ManyToMany
     @JoinTable(
             name = "sentence_en_tr",
-            joinColumns = @JoinColumn(name = "sentence_en_id"),
-            inverseJoinColumns = @JoinColumn(name = "sentence_tr_id"))
+            joinColumns = @JoinColumn(name = "sentence_tr_id"),
+            inverseJoinColumns = @JoinColumn(name = "sentence_en_id"))
     private List<SentenceEn> equal;
 
     public List<SentenceEn> getEqual() { return equal; }
@@ -19,8 +20,5 @@ public class SentenceTr extends Sentence {
     public void setEqual(List<SentenceEn> equal) { this.equal = equal; }
 
     @Override
-    public List<Phrase> getEquals() {
-        List<Phrase> phrases = new ArrayList<>(getEqual());
-        return phrases;
-    }
+    public List<Phrase> getEquals() { return new ArrayList<>(getEqual()); }
 }

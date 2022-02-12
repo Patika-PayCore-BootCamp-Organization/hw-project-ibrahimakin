@@ -1,7 +1,7 @@
 package com.iAKIN.LanguageApp.service.impl;
 
 import com.iAKIN.LanguageApp.repository.UserRepository;
-import com.iAKIN.LanguageApp.model.User;
+import com.iAKIN.LanguageApp.model.user.User;
 import com.iAKIN.LanguageApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

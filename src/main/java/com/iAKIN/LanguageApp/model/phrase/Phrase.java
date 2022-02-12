@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface Phrase {
     Integer getId();
+    String getDef();
     String getImg();
     String getValue();
     String getQuotes();

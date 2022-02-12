@@ -1,4 +1,4 @@
-package com.iAKIN.LanguageApp.model;
+package com.iAKIN.LanguageApp.model.user;
 
 import lombok.*;
 
