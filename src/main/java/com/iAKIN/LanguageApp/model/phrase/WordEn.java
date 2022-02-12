@@ -7,12 +7,9 @@ import java.util.List;
 @Entity
 @Table(name = "word_en")
 public class WordEn extends Word {
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    @JoinTable(
-            name = "word_en_tr",
-            joinColumns = @JoinColumn(name = "word_tr_id"),
-            inverseJoinColumns = @JoinColumn(name = "word_en_id"))
-    private List<WordTr> equal;
+
+    @ManyToMany(mappedBy = "equal")
+    private List<WordTr> equal = new ArrayList<>();
 
     public List<WordTr> getEqual() { return equal; }
 

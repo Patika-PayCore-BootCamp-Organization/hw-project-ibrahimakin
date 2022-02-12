@@ -1,7 +1,5 @@
 package com.iAKIN.LanguageApp.model.phrase;
 
-import org.springframework.lang.Nullable;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,12 +7,12 @@ import java.util.List;
 @Entity
 @Table(name = "sentence_tr")
 public class SentenceTr extends Sentence {
-    @OneToMany
-    @Nullable
+
+    @ManyToMany
     @JoinTable(
             name = "sentence_en_tr",
-            joinColumns = @JoinColumn(name = "sentence_en_id"),
-            inverseJoinColumns = @JoinColumn(name = "sentence_tr_id"))
+            joinColumns = @JoinColumn(name = "sentence_tr_id"),
+            inverseJoinColumns = @JoinColumn(name = "sentence_en_id"))
     private List<SentenceEn> equal;
 
     public List<SentenceEn> getEqual() { return equal; }

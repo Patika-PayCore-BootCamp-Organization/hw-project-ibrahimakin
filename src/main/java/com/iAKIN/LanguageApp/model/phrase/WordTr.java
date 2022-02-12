@@ -7,12 +7,13 @@ import java.util.List;
 @Entity
 @Table(name = "word_tr")
 public class WordTr extends Word {
+
     @ManyToMany
     @JoinTable(
             name = "word_en_tr",
-            joinColumns = @JoinColumn(name = "word_en_id"),
-            inverseJoinColumns = @JoinColumn(name = "word_tr_id"))
-    private List<WordEn> equal;
+            joinColumns = @JoinColumn(name = "word_tr_id"),
+            inverseJoinColumns = @JoinColumn(name = "word_en_id"))
+    private List<WordEn> equal = new ArrayList<>();
 
     public List<WordEn> getEqual() { return equal; }
 

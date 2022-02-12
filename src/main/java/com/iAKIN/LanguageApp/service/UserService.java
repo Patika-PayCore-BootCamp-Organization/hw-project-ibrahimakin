@@ -1,6 +1,6 @@
 package com.iAKIN.LanguageApp.service;
 
-import com.iAKIN.LanguageApp.model.User;
+import com.iAKIN.LanguageApp.model.user.User;
 
 import java.util.List;
 
