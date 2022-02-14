@@ -1,29 +1,34 @@
 package com.iAKIN.LanguageApp.model.user;
 
-import lombok.*;
+import com.iAKIN.LanguageApp.model.role.Role;
+import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import java.util.Date;
+import javax.validation.constraints.Size;
+import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@Data
 @Entity
 @Table(name = "\"user\"")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
     private Integer id;
-    @NotBlank
-    private String fullname;
-    @NotBlank
+
+    @Size(min = 5, max = 25, message = "username length should be between 5 and 25 characters")
+    @Column(unique = true, nullable = false)
     private String username;
-    @NotBlank
+
+    @Column(unique = true, nullable = false)
     private String email;
-    private Date created;
+
+    @Size(min = 5, message = "Minimum password length: 5 characters")
+    private String password;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles", joinColumns = {
+            @JoinColumn(name = "user_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "role_id")})
+    public List<Role> roles;
 }

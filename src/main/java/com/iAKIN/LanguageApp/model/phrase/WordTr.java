@@ -8,6 +8,7 @@ import java.util.List;
 @Table(name = "word_tr")
 public class WordTr extends Word {
 
+    // @JsonManagedReference
     @ManyToMany
     @JoinTable(
             name = "word_en_tr",
