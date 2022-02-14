@@ -1,44 +1,46 @@
 package com.iAKIN.LanguageApp.controller;
 
 import com.iAKIN.LanguageApp.model.user.User;
-import com.iAKIN.LanguageApp.service.UserService;
+import com.iAKIN.LanguageApp.model.user.UserLoginDTO;
+import com.iAKIN.LanguageApp.model.user.UserResponseDTO;
+import com.iAKIN.LanguageApp.model.user.UserDataDTO;
+import com.iAKIN.LanguageApp.service.impl.UserServiceImpl;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Min;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
+@Validated
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
-    // @Qualifier("UserServiceImpl")
-    private UserService userService;
+    private UserServiceImpl userService;
 
-    @RequestMapping(method = RequestMethod.GET, path = "/hello")
-    public String hello() {
-        return "Hello";
+    @PostMapping("/signin")
+    public String login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
+        return userService.signin(userLoginDTO.getUsername(), userLoginDTO.getPassword());
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/all")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    @PostMapping("/signup")
+    public String signup(@RequestBody @Valid UserDataDTO user) {
+        ModelMapper modelMapper = new ModelMapper();
+        return userService.signup(modelMapper.map(user, User.class));
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/get")
-    public User getUser(@RequestParam Integer id) {
-        return userService.getUser(id);
+    @DeleteMapping(value = "/{username}")
+    public String delete(@PathVariable String username) {
+        userService.delete(username);
+        return username;
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/add")
-    public boolean addUser(@RequestBody User user) {
-        return userService.addUser(user);
+    @GetMapping(value = "/me")
+    public UserResponseDTO whoami(HttpServletRequest req) {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(userService.whoami(req), UserResponseDTO.class);
     }
-
-    @PutMapping(value = "/update")
-    public User updateUser(@RequestBody final User user) { return userService.updateUser(user); }
-
-    @DeleteMapping(value = "/delete/{id}")
-    public boolean deleteUser(@PathVariable @Min(1) final Integer id) { return userService.deleteUser(id); }
 }

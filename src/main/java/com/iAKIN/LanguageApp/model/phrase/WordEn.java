@@ -8,6 +8,7 @@ import java.util.List;
 @Table(name = "word_en")
 public class WordEn extends Word {
 
+    // @JsonBackReference
     @ManyToMany(mappedBy = "equal")
     private List<WordTr> equal = new ArrayList<>();
 

@@ -1,43 +1,88 @@
 package com.iAKIN.LanguageApp.service.impl;
 
-import com.iAKIN.LanguageApp.repository.UserRepository;
+import com.iAKIN.LanguageApp.exception.CustomJwtException;
 import com.iAKIN.LanguageApp.model.user.User;
-import com.iAKIN.LanguageApp.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.iAKIN.LanguageApp.repository.RoleRepository;
+import com.iAKIN.LanguageApp.repository.UserRepository;
+import com.iAKIN.LanguageApp.security.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 
 @Service
-public class UserServiceImpl implements UserService {
+@RequiredArgsConstructor
+public class UserServiceImpl {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Override
-    public List<User> getAllUsers() { return userRepository.findAll(); }
+    private final RoleRepository roleRepository;
 
-    @Override
-    public User getUser(Integer id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) return user.get();
-        return null;
+    private final PasswordEncoder passwordEncoder;
+
+    private final JwtTokenProvider jwtTokenProvider;
+
+    private final AuthenticationManager authenticationManager;
+
+//    @PostConstruct
+//    private void postConstruct() {
+//        // Sample test admin user insert
+//        User admin = new User();
+//        admin.setUsername("admin1");
+//        admin.setPassword("pass12345");
+//        admin.setEmail("admin@email.com");
+//        admin.setRoles(Collections.singletonList(roleRepository.getById(1)));
+//        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+//        userRepository.save(admin);
+//    }
+
+    public String signin(String username, String password) {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
+        } catch (AuthenticationException e) {
+            throw new CustomJwtException("Invalid username/password supplied", HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @Override
-    public boolean addUser(User user) {
-        User save = userRepository.save(user);
-        if (save == null) return false;
-        return true;
+    public String signup(User user) {
+        if (!userRepository.existsByUsername(user.getUsername())) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setRoles(Collections.singletonList(roleRepository.getById(2)));
+            userRepository.save(user);
+            return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+        } else {
+            throw new CustomJwtException("Username is already in use", HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @Override
-    public User updateUser(User user) { return userRepository.save(user); }
+    public void delete(String username) {
+        if (!userRepository.existsByUsername(username)) {
+            userRepository.deleteByUsername(username);
+        } else {
+            throw new CustomJwtException("Username is not found", HttpStatus.NOT_FOUND);
+        }
+    }
 
-    @Override
-    public boolean deleteUser(Integer id) {
-        userRepository.deleteById(id);
-        return true;
+    public User search(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new CustomJwtException("The user doesn't exist", HttpStatus.NOT_FOUND);
+        }
+        return user;
+    }
+
+    public User whoami(HttpServletRequest req) {
+        return userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+    }
+
+    public String refresh(String username) {
+        return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
     }
 }

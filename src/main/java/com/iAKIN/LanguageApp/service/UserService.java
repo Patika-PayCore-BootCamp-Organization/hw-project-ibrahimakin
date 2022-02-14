@@ -1,18 +1,15 @@
 package com.iAKIN.LanguageApp.service;
 
 import com.iAKIN.LanguageApp.model.user.User;
-
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 public interface UserService {
 
-    List<User> getAllUsers();
+    String signin(String username, String password);
 
-    User getUser(Integer id);
+    String signup(User user);
 
-    boolean addUser(User user);
+    Object whoami(HttpServletRequest req);
 
-    boolean deleteUser(Integer id);
-
-    User updateUser(User user);
+    void delete(String username);
 }

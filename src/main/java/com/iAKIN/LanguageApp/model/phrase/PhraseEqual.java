@@ -6,14 +6,13 @@ import lombok.Data;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
 @Data
 public class PhraseEqual {
-    @NotEmpty
+    // @NotEmpty
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<@Valid PhraseEqual> equals;
     @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -37,7 +37,7 @@ public class PhraseServiceImpl implements PhraseService {
 
     @Override
     public PhraseEqual getPhrase(String type, String lang, Integer id) {
-        Optional phrase = Optional.empty();
+        Optional<?> phrase = Optional.empty();
         if (type.equals("sentence")) phrase = sentenceTrRepository.findById(id);
         else if (type.equals("word")) {
             if (lang.equals("tr")) phrase = wordTrRepository.findById(id);
